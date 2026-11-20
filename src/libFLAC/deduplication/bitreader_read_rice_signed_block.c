@@ -107,6 +107,13 @@ incomplete_msbs:
 			msbs += x;
 			x = ucbits = 0;
 
+			/* the limit check above does not cover codes that span a
+			 * refill of the bitreader buffer, so check here too, or
+			 * acceptance of an over-limit code would depend on how the
+			 * input happened to be chunked by the read callback */
+			if(msbs > limit)
+				return false;
+
 			if(0) {
 incomplete_lsbs:
 				br->consumed_bits = 0;
